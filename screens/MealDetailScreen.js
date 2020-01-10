@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
   ScrollView,
   View,
@@ -7,9 +7,10 @@ import {
   StyleSheet
 } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import HeaderButton from '../components/HeaderButton';
 import DefaultText from '../components/DefaultText';
+import { toggleFavorite } from '../store/actions/meals';
 
 const ListItem = props => {
   return (
@@ -24,13 +25,18 @@ const MealDetailScreen = props => {
   const mealId = props.navigation.getParam('mealId');
 
   const selectedMeal = availableMeals.find(meal => meal.id === mealId);
+  const dispatch = useDispatch()
 
-  //147 solution 1
-  // useEffect(() => {
-  //   //only adds to existing params
-  //   props.navigation.setParams({ mealTitle: selectedMeal.title })
-  // }, [selectedMeal]) //when selectedMeal changes, we forward selectedMeal to the header
+  const toggleFavoriteHandler = useCallback(() => {
+    dispatch(toggleFavorite(mealId))
+  }, [dispatch, mealId])
 
+  //148 11:08
+  useEffect(() => {
+    //only adds to existing params
+    // props.navigation.setParams({ mealTitle: selectedMeal.title })
+    props.navigation.setParams({ toggleFav: toggleFavoriteHandler })
+  }, [toggleFavoriteHandler])
 
   return (
     <ScrollView>
@@ -53,9 +59,10 @@ const MealDetailScreen = props => {
 };
 
 MealDetailScreen.navigationOptions = navigationData => {
-  const mealId = navigationData.navigation.getParam('mealId');
+  // const mealId = navigationData.navigation.getParam('mealId');
   //fetch Title from the params
   const mealTitle = navigationData.navigation.getParam('mealTitle')
+  const toggleFavorite = navigationData.navigation.getParam('toggleFav')
   // const selectedMeal = MEALS.find(meal => meal.id === mealId);
   return {
     headerTitle: mealTitle,
@@ -64,9 +71,7 @@ MealDetailScreen.navigationOptions = navigationData => {
         <Item
           title="Favorite"
           iconName="ios-star"
-          onPress={() => {
-            console.log('Mark as favorite!');
-          }}
+          onPress={toggleFavorite}
         />
       </HeaderButtons>
     )
