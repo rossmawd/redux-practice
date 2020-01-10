@@ -25,10 +25,11 @@ const MealDetailScreen = props => {
   const mealId = props.navigation.getParam('mealId');
 
   const selectedMeal = availableMeals.find(meal => meal.id === mealId);
-  const dispatch = useDispatch()
+
+  const dispatch = useDispatch()//so it can be pointed to as a dependency below?
 
   const toggleFavoriteHandler = useCallback(() => {
-    useDispatch((toggleFavorite(mealId)))
+    dispatch(toggleFavorite(mealId))
   }, [dispatch, mealId])
 
   //148 11:08
