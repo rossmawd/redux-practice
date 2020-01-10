@@ -9,7 +9,7 @@ const FavoritesScreen = props => {
   // not accessing filtered meals as he thinks favouties should always display all meals
   const favMeals = useSelector(state => state.meals.favoriteMeals)
 
-  const favMeals = MEALS.filter(meal => meal.id === 'm1' || meal.id === 'm2');
+  // const favMeals = MEALS.filter(meal => meal.id === 'm1' || meal.id === 'm2');
   return <MealList listData={favMeals} navigation={props.navigation} />;
 };
 

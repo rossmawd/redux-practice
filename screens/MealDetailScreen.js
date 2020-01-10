@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ScrollView,
   View,
@@ -20,10 +20,17 @@ const ListItem = props => {
 };
 
 const MealDetailScreen = props => {
-  const availableMeals = useSelector(state => state.meals.mea)
+  const availableMeals = useSelector(state => state.meals.meals)
   const mealId = props.navigation.getParam('mealId');
 
-  const selectedMeal = MEALS.find(meal => meal.id === mealId);
+  const selectedMeal = availableMeals.find(meal => meal.id === mealId);
+
+  //147 solution 1
+  // useEffect(() => {
+  //   //only adds to existing params
+  //   props.navigation.setParams({ mealTitle: selectedMeal.title })
+  // }, [selectedMeal]) //when selectedMeal changes, we forward selectedMeal to the header
+
 
   return (
     <ScrollView>
@@ -47,9 +54,11 @@ const MealDetailScreen = props => {
 
 MealDetailScreen.navigationOptions = navigationData => {
   const mealId = navigationData.navigation.getParam('mealId');
-  const selectedMeal = MEALS.find(meal => meal.id === mealId);
+  //fetch Title from the params
+  const mealTitle = navigationData.navigation.getParam('mealTitle')
+  // const selectedMeal = MEALS.find(meal => meal.id === mealId);
   return {
-    headerTitle: selectedMeal.title,
+    headerTitle: mealTitle,
     headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
